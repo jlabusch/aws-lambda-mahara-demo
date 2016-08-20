@@ -1,0 +1,23 @@
+version: "2"
+
+services:
+    app:
+        image: jlabusch/mahara:16.04.3
+        build: .
+        restart: always
+        ports:
+            - "80:80"
+        links:
+            - postgres
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+    postgres:
+        image: postgres:9.4
+        expose:
+            - "5132"
+        environment:
+            POSTGRES_PASSWORD: "maharapassword"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./db:/docker-entrypoint-initdb.d:ro
+
