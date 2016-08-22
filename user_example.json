@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "username": "aaa-username",
+      "password": "aaa",
+      "firstname": "aaa-firstname",
+      "lastname": "aaa-lastname",
+      "email": "aaa@shark.hoe"
+    }
+  ]
+}

@@ -16,5 +16,5 @@ run:
 
 clean:
 	$(DOCKER) rmi $(IMAGE) || :
-	$(DOCKER) rmi $(docker images --filter dangling=true -q) || :
+	$(DOCKER) rmi $($(DOCKER) images --filter dangling=true -q) || :
 
