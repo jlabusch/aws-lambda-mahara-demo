@@ -1,11 +1,5 @@
-var config = {
-    host:       process.env.SCRIPT_HOST,
-    user:       process.env.SCRIPT_USER,
-    password:   process.env.SCRIPT_PASS
-};
-
 var data_source = {
-    fetch: function(handler){
+    fetch: function(config, next){
         var ftp = require('ftp');
 
         var client = new ftp();
@@ -13,23 +7,25 @@ var data_source = {
         client.on('ready', function(){
             client.list(function(err, list){
                 if (err){
-                    throw err;
+                    next && next(err);
+                    return;
                 }
                 client.get('mahara_users.csv', function(err, stream){
                     if (err){
-                        throw err;
+                        next && next(err);
+                        return;
                     }
                     var buffer = '';
                     stream.on('data', function(chunk){
                         buffer = buffer + chunk.toString();
                     });
                     stream.on('error', function(err){
-                        throw err;
+                        next && next(err);
                     });
                     stream.once('close', function(){
                         client.end();
                         console.error('Got buffer with ' + buffer.length + ' bytes');
-                        handler(buffer);
+                        next && next(null, buffer);
                     });
                 });
             });
@@ -37,7 +33,12 @@ var data_source = {
 
         client.connect(config);
     },
-    transform: function(data, next){
+    transform: function(err, data, next){
+        if (err){
+            next && next(err);
+            return;
+        }
+
         var parser = require('csv-parse');
 
         parser(data, function(err, records){
@@ -72,18 +73,43 @@ var data_source = {
                 post_data.users.push(result);
             });
 
-            next(null, post_data);
+            next && next(null, post_data);
         });
+    },
+    load: function(err, context, next){
+        if (err){
+            throw err;
+        }
+        console.log(context.uri);
+
+        var http = require('superagent');
+
+        http.post(context.uri)
+            .set('Content-Type', 'application/json')
+            .send(context.json)
+            .end(next);
     }
 };
 
 data_source.fetch(
-    function(raw){
-        data_source.transform(raw, function(err, res){
-            if (err){
-                throw err;
-            }
-            console.log(JSON.stringify(res, null, 4));
+    {
+        host:       process.env.SCRIPT_HOST,
+        user:       process.env.SCRIPT_USER,
+        password:   process.env.SCRIPT_PASS
+    },
+    function(err, raw){
+        data_source.transform(err, raw, function(err, json){
+            data_source.load(
+                err,
+                {uri: process.env.SCRIPT_MAHARA, json: json},
+                function(err, res){
+                    if (err){
+                        console.error(err);
+                    }else{
+                        console.log('Status: ' + res.status);
+                    }
+                }
+            );
         });
     }
 );
