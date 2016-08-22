@@ -1,0 +1,16 @@
+{
+  "name": "import-script",
+  "version": "1.0.0",
+  "description": "Mahara user import utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
+  },
+  "author": "Jacques Labuschagne <jlabusch@acm.org>",
+  "license": "GPLv3",
+  "dependencies": {
+    "csv-parse": "^1.1.7",
+    "ftp": "^0.3.10"
+  }
+}
