@@ -1,4 +1,7 @@
 .*.swp
+*.zip
 node_modules
 npm-debug.log
 .npm
+config.json
+node_modules
