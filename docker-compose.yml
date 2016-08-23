@@ -6,7 +6,7 @@ services:
         build: .
         restart: always
         ports:
-            - "80:80"
+            - "8003:80"
         links:
             - postgres
         volumes:
