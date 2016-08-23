@@ -1,6 +1,6 @@
 # mahara-docker
 
-<span style="background:yellow">DO NOT USE THIS FOR ANYTHING SERIOUS.</span><br/>
+<span style="background-color:yellow">DO NOT USE THIS FOR ANYTHING SERIOUS.</span><br/>
 It's completely untested, only exists because I needed a Mahara system for a tech demo.
 
 P.S. if you need a real Mahara system, I know people.
