@@ -8,9 +8,10 @@ P.S. if you need a real Mahara system, I know people.
 
 ### Notes
 
-* Start Mahara with docker-compose up
-* Load website, mash "Install" and register your admin user
+* Start Mahara with cd mahara && docker-compose up -d
+* Load website at localhost:80, mash "Install" and register your admin user
 * Go to Administration -> Extensions -> Web services and select "Use web services"
 * Create a service access token for "admin" in the User Provisioning service, e.g. 8b3fb24be9aeaf7e36f2cf88cb19112c
-* Update the token and password in import-script/Makefile
-* cd import-script && make clean build run
+* Update the token and password in import-script/config.json (which I haven't checked in on purpose.)
+* cd import-script && make clean build
+* Upload import-script.zip as an AWS Lambda function

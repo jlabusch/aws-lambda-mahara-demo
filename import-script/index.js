@@ -1,115 +1,120 @@
-var data_source = {
-    fetch: function(config, next){
-        var ftp = require('ftp');
+var config = require('./config.json');
 
-        var client = new ftp();
+exports.handler = function(event, context, callback){
+    chain(fetch, transform, load, callback);
+}
 
-        client.on('ready', function(){
-            client.list(function(err, list){
-                if (err){
-                    next && next(err);
-                    return;
-                }
-                client.get('mahara_users.csv', function(err, stream){
-                    if (err){
-                        next && next(err);
-                        return;
-                    }
-                    var buffer = '';
-                    stream.on('data', function(chunk){
-                        buffer = buffer + chunk.toString();
-                    });
-                    stream.on('error', function(err){
-                        next && next(err);
-                    });
-                    stream.once('close', function(){
-                        client.end();
-                        console.error('Got buffer with ' + buffer.length + ' bytes');
-                        next && next(null, buffer);
-                    });
-                });
-            });
-        });
+function chain(){
+    var list = Array.prototype.slice.call(arguments, 0);
 
-        client.connect(config);
-    },
-    transform: function(err, data, next){
-        if (err){
-            next && next(err);
+    function __next(err, res){
+        var f = list.shift();
+        if (!f){
             return;
         }
+        f(err, res, __next);
+    }
 
-        var parser = require('csv-parse');
+    __next();
+}
 
-        parser(data, function(err, records){
+function fetch(err, _, next){
+    if (err){
+        console.error(err);
+        process.exit(1);
+    }
+
+    var ftp = require('ftp');
+
+    var client = new ftp();
+
+    client.on('ready', function(){
+        client.list(function(err, list){
             if (err){
                 next && next(err);
                 return;
             }
-            var headings = null,
-                post_data = {
-                    users: [
-                    ]
-                };
-
-            records.forEach(function(rec){
-
-                if (rec.length < 5){
-                    console.error('Less than 5 fields, skipping ' + JSON.stringify(rec));
+            client.get('mahara_users.csv', function(err, stream){
+                if (err){
+                    next && next(err);
                     return;
                 }
-
-                if (!headings){
-                    headings = rec;
-                    return;
-                }
-
-                var result = {},
-                    i = 0;
-                rec.forEach(function(r){
-                    result[headings[i]] = r;
-                    ++i;
+                var buffer = '';
+                stream.on('data', function(chunk){
+                    buffer = buffer + chunk.toString();
                 });
-                post_data.users.push(result);
+                stream.on('error', function(err){
+                    next && next(err);
+                });
+                stream.once('close', function(){
+                    client.end();
+                    console.error('Got buffer with ' + buffer.length + ' bytes');
+                    next && next(null, {data: buffer});
+                });
             });
-
-            next && next(null, post_data);
         });
-    },
-    load: function(err, context, next){
+    });
+
+    client.connect(config);
+}
+
+function transform(err, event, next){
+    if (err){
+        console.error(err);
+        process.exit(1);
+    }
+
+    var parser = require('csv-parse');
+
+    parser(event.data, function(err, records){
         if (err){
-            throw err;
+            next && next(err);
+            return;
         }
-        console.log(context.uri);
+        var headings = null,
+            post_data = {
+                users: [
+                ]
+            };
 
-        var http = require('superagent');
+        records.forEach(function(rec){
+            if (rec.length < 5){
+                console.info('Less than 5 fields, skipping ' + JSON.stringify(rec));
+                return;
+            }
 
-        http.post(context.uri)
-            .set('Content-Type', 'application/json')
-            .send(context.json)
-            .end(next);
-    }
-};
+            if (!headings){
+                headings = rec;
+                return;
+            }
 
-data_source.fetch(
-    {
-        host:       process.env.SCRIPT_HOST,
-        user:       process.env.SCRIPT_USER,
-        password:   process.env.SCRIPT_PASS
-    },
-    function(err, raw){
-        data_source.transform(err, raw, function(err, json){
-            data_source.load(
-                err,
-                {uri: process.env.SCRIPT_MAHARA, json: json},
-                function(err, res){
-                    if (err){
-                        console.error(err);
-                    }else{
-                        console.log('Status: ' + res.status);
-                    }
-                }
-            );
+            var result = {},
+                i = 0;
+            rec.forEach(function(r){
+                result[headings[i]] = r;
+                ++i;
+            });
+            post_data.users.push(result);
         });
+
+        next && next(null, post_data);
+    });
+}
+
+function load(err, event, next){
+    if (err){
+        console.error(err);
+        process.exit(1);
     }
-);
+
+    console.log(JSON.stringify(event));
+    console.log(config.mahara_uri);
+
+    var http = require('superagent');
+
+    http.post(config.mahara_uri)
+        .set('Content-Type', 'application/json')
+        .send(event)
+        .end(next);
+}
+

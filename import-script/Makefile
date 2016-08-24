@@ -4,14 +4,19 @@ DOCKER=docker
 
 .PHONY: build run clean
 
-build:
+build: $(BASE).zip
+
+$(BASE).zip: index.js package.json config.json Dockerfile
 	@$(DOCKER) build -t $(IMAGE) .
+	@$(DOCKER) run -it --rm -v $$PWD:/opt/app $(IMAGE) npm install
+	rm -f $@
+	zip -r $@ *
 
 run:
-	@$(DOCKER) images | grep -q $(IMAGE) || make build
-	@$(DOCKER) run -it --rm -e SCRIPT_HOST=whale.shark.horse -e SCRIPT_USER=jacques -e SCRIPT_PASS=XXX -e SCRIPT_MAHARA='http://192.168.0.16:8003/webservice/rest/server.php?wstoken=2d8cf387e7bfd1e2a8848845a3a7e26f&wsfunction=mahara_user_create_users&alt=json' $(IMAGE) npm start
+	@$(DOCKER) run -it --rm -v $$PWD:/opt/app $(IMAGE)
 
 clean:
-	rm -fr node_modules
-	$(DOCKER) rmi $$($(DOCKER) images --filter dangling=true -q) $(IMAGE) || :
+	$(DOCKER) rmi $(IMAGE) || :
+	$(DOCKER) rmi $$($(DOCKER) images --filter dangling=true -q) || :
+	rm -f $(BASE).zip
 

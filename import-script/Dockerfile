@@ -1,13 +1,13 @@
 FROM node:4.3
 
-RUN useradd -m -s /bin/bash jacques
+RUN useradd -m -s /bin/bash jacques && \
+    mkdir -p /opt/app && \
+    chown jacques:jacques /opt/app
 
 USER jacques
 
-ADD index.js package.json /home/jacques/
+ADD index.js package.json /opt/app/
 
-RUN cd /home/jacques && npm install
-
-WORKDIR /home/jacques
+WORKDIR /opt/app
 
 CMD ["bash"]

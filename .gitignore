@@ -1,5 +1,6 @@
 .*.swp
 *.zip
+*.tbz2
 node_modules
 npm-debug.log
 .npm
