@@ -6,7 +6,7 @@ services:
         build: .
         restart: always
         ports:
-            - "8003:80"
+            - "80:80"
         links:
             - postgres
         volumes:
@@ -19,5 +19,4 @@ services:
             POSTGRES_PASSWORD: "maharapassword"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ./db:/docker-entrypoint-initdb.d:ro
 

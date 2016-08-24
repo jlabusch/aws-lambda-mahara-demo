@@ -13,5 +13,5 @@ run:
 
 clean:
 	rm -fr node_modules
-	$(DOCKER) rmi $(docker images --filter dangling=true -q) $(IMAGE) || :
+	$(DOCKER) rmi $$($(DOCKER) images --filter dangling=true -q) $(IMAGE) || :
 
