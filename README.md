@@ -1,12 +1,14 @@
-# mahara-docker
+# AWS Lambda/Mahara demo
+
+This code accompanies a presentation on doing "serverless" user import/migration for Mahara.
 
 <b>DO NOT USE THIS FOR ANYTHING SERIOUS.</b><br/>
-It's completely untested, only exists because I needed a Mahara system for a tech demo.
+It's completely untested, only exists for tech demo purposes.
 
 P.S. if you need a real Mahara system, I know people.
 
 
-### Notes
+### Notes to self
 
 * Start Mahara with cd mahara && docker-compose up -d
 * Load website at localhost:80, mash "Install" and register your admin user
