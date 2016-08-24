@@ -26,7 +26,7 @@ exports.handler = function(event, context, next){
                 stream.once('close', function(){
                     client.end();
                     console.error('Got buffer with ' + buffer.length + ' bytes');
-                    next && next(null, buffer);
+                    next && next(null, {data: buffer});
                 });
             });
         });

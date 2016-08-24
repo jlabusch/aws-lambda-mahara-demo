@@ -6,7 +6,7 @@ DOCKER=docker
 
 build: $(BASE).zip
 
-$(BASE).zip: index.js package.json config.json Dockerfile
+$(BASE).zip: index.js Dockerfile package.json
 	@$(DOCKER) build -t $(IMAGE) .
 	@$(DOCKER) run -it --rm -v $$PWD:/opt/app $(IMAGE) npm install
 	rm -f $@
