@@ -1,3 +1,203 @@
-<html>
-<body>Hello world</body>
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Serverless 101</title>
+
+        <meta name="author" content="Jacques Labuschagne">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/catalyst.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <style>
+            /* Add the ability to omit slides from the printed version (has to be after the print include)*/
+            @media print {
+                .reveal .slides section.no-print {
+                    display: none !important;
+                    visibility: hidden !important;
+                }
+            }
+        </style>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+
+        <!-- Please put any custom styles here -->
+        <style>
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <div class="slides">
+                <section>
+                    <h1 style="color:#2a2527;font-size:12em;text-shadow:2px 2px 10px #000;">&lambda;</h1>
+                    <h3 class="catalyst-logo">Catalyst</h3>
+                </section>
+                <!--
+                <section>
+                    <table>
+                        <tr>
+                            <td colspan="3"><h1 style="text-shadow:2px 2px 5px #111;color:#e6ad30">Serverless</h1></td><td></td>
+                        </tr>
+                        <tr>
+                            <td><h1 style="text-shadow:2px 2px 5px #111;text-align:left;color:#889a3a;">Web-</h1></td><td colspan="2"><h1 style="color:#5b9aa9;text-align:right;text-shadow:2px 2px 5px #111;">NoOps</h1></td>
+                        </tr>
+                        <tr>
+                            <td><h1 style="text-shadow:2px 2px 5px #111;text-align:left;color:#889a3a;">scale</h1></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><h1 style="text-align:right;text-shadow:2px 2px 5px #111;">What the hell</h1></td>
+                        </tr>
+                    </table>
+                    <aside class="notes">
+                    </aside>
+                </section>
+                -->
+                <section data-background="img/jan_brueghel_garden_of_eden.jpg" data-background-size="100% auto">
+                    <h2 style="text-align:left;text-shadow:2px 2px 5px #000;">In the beginning there was <span style="color:#e6ad30;">Bare Metal</span>, and it was good.</h2>
+                </section>
+                <section data-background="img/ibm_green_dc.jpg" data-background-size="100% auto">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;"><span style="color:#e6ad30;">BM</span> is fast,</h2>
+                    <h2 style="text-align:right;text-shadow:2px 2px 5px #000;">reliable*,</h2>
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">And it's all yours.</h2>
+                </section>
+                <section data-background="img/Dennis_Jarvis_tunisian_donkey.jpg" data-background-size="100% auto" data-background-position="top">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">But suppliers were slow.</h2>
+                    <h2 style="text-align:left;text-shadow:2px 2px 5px #000;">In time,</h2>
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">the people turned to <span style="color:#e6ad30;">VMs</span> for scalability.</h2>
+                </section>
+                <section data-background="img/button_aas.jpg" data-background-size="100% auto" data-background-position="bottom">
+                    <h2 style="text-align:left;text-shadow:2px 2px 5px #000;">Providers began to allow self-service,</h2>
+                    <h2 style="text-align:right;text-shadow:2px 2px 5px #000;">and so <span style="color:#e6ad30;">IaaS</span> was born.</h2>
+                </section>
+                <section data-background="img/conductor.jpg" data-background-size="100% auto">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">Self-service became</h2>
+                    <h2 style="text-align:right;text-shadow:2px 2px 5px #000;">orchestration,</h2>
+                    <h2 style="text-align:right;text-shadow:2px 2px 5px #000;">and <span style="color:#e6ad30;">IaC</span> took the stage.</h2>
+                </section>
+                <section data-background="img/containers.jpg" data-background-size="100% auto" data-background-position="bottom">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">Containers shifted focus from platforms to applications,</h2>
+                    <h2 style="text-align:right;text-shadow:2px 2px 5px #000;">giving us <span style="color:#e6ad30;">PaaS</span>.</h2>
+                </section>
+                <section data-background="img/delta_alpha_new_dc.jpg" data-background-size="100% auto" data-background-position="bottom">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">Then came <span style="color:#e6ad30;">serverless</span>.</h2>
+                    <h3 style="text-align:center;text-shadow:2px 2px 5px #000;">aka FaaS, NoOps, or "what the hell."</h3>
+                </section>
+                <section data-background="img/john_hallmen_grumpy.jpg" data-background-size="100% auto">
+                    <h2 style="text-align:center;text-shadow:2px 2px 5px #000;">Of course there's a <span style="color:#e6ad30;">server</span>&hellip;</h2>
+                    <h3 style="text-align:left;text-shadow:2px 2px 5px #000;">Cloud is always just</h3>
+                    <h3 style="text-align:right;text-shadow:2px 2px 5px #000;">"someone else's server."</h3>
+                </section>
+                <section>
+                    <table style="text-shadow:2px 2px 5px #000;">
+                      <tr><td style="color:#e6ad30;text-align:right;">IaaS</td><td>Your OS, someone else's (virtual) hardware</td></tr>
+                      <tr><td>&nbsp;</td></tr>
+                      <tr><td style="color:#e6ad30;text-align:right;">PaaS</td><td>Your application/container, someone else's OS</td></tr>
+                      <tr><td>&nbsp;</td></tr>
+                      <tr><td style="color:#e6ad30;text-align:right;">FaaS</td><td>Your code, someone else's application</td></tr>
+                    </table>
+                </section>
+                <section data-background="img/lambda_wall.jpg" data-background-size="100% auto">
+                </section>
+                <section>
+                    <h3 style="text-align:left;text-shadow:2px 2px 5px #000;"><span style="color:#e6ad30;">FaaS</span> demo:</h3>
+                    <ul style="text-align:left;text-shadow:2px 2px 5px #000;">
+                        <li style="padding-top:1em;">Customer's HR system provides updated list of users every night at 1am.
+                        <li style="padding-top:1em;">The list is available as a CSV file on their FTP server.
+                        <li style="padding-top:1em;">We need to import the list into Mahara.
+                    </ul>
+                </section>
+                <section data-background="img/FaaS.svg" data-background-size="auto 60%">
+                </section>
+                <section data-background="img/new_lambda.png" data-background-size="auto 80%">
+                </section>
+                <section data-background="img/dash.png" data-background-size="80% auto">
+                </section>
+                <section data-background="img/cloudwatch.png" data-background-size="auto 70%">
+                </section>
+            </div>
+
+            <div class="footer">
+                <div class="scarf">
+                    <div class="scarf-orange"></div>
+                    <div class="scarf-yellow"></div>
+                    <div class="scarf-blue"></div>
+                    <div class="scarf-green"></div>
+                </div>
+                <div class="footer-inner">
+                    <div>
+                        <!-- NOTE: use only one of these. open-source-technologists is the standard -->
+                        <p class="open-source-technologists">open source technologists</p>
+                        <!-- <p class="freedom-to-innovate">freedom to innovate</p> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+        <!--
+        <script src="http://downlink.nz/js/socket.io.js"></script>
+        <script src="http://downlink.nz/js/reveal-sync.js"></script>
+        -->
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: 'slide',//Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+                /*
+                // Parallax scrolling
+                parallaxBackgroundImage: './img/15002364119_29914535f7_o.jpg', // by Ilias Ismanalijev
+                parallaxBackgroundSize: '3000px auto',
+                */
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+        </script>
+
+    </body>
 </html>
