@@ -1,7 +1,7 @@
 var config = require('./config.json');
 
 exports.handler = function(event, context, callback){
-    chain(fetch, transform, load, callback);
+    chain(fetch, transform, load, callback)(null, event);
 }
 
 function chain(){
@@ -15,13 +15,18 @@ function chain(){
         f(err, res, __next);
     }
 
-    __next();
+    return __next;
 }
 
-function fetch(err, _, next){
+function fetch(err, ev, next){
     if (err){
         console.error(err);
         process.exit(1);
+    }
+
+    if (ev && ev.fake === true){
+        next && next(null, {data: 'email,username,firstname,lastname'});
+        return;
     }
 
     var ftp = require('ftp');
@@ -78,8 +83,8 @@ function transform(err, event, next){
             };
 
         records.forEach(function(rec){
-            if (rec.length < 5){
-                console.info('Less than 5 fields, skipping ' + JSON.stringify(rec));
+            if (rec.length < 4){
+                console.info('Less than 4 fields, skipping ' + JSON.stringify(rec));
                 return;
             }
 
@@ -94,6 +99,7 @@ function transform(err, event, next){
                 result[headings[i]] = r;
                 ++i;
             });
+            result.password = result.password || 'xxxxxx'; // nope, not generating real passwords for a demo
             post_data.users.push(result);
         });
 
