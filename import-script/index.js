@@ -107,9 +107,6 @@ function load(err, event, next){
         process.exit(1);
     }
 
-    console.log(JSON.stringify(event));
-    console.log(config.mahara_uri);
-
     var http = require('superagent');
 
     http.post(config.mahara_uri)
