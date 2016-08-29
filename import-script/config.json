@@ -1,0 +1,7 @@
+{
+    "host": "nurse.shark.horse",
+    "user": "anonymous",
+    "password": "",
+    "mahara_uri": "http://nurse.shark.horse/webservice/rest/server.php?wstoken=665a3052fe53254d80be79444eee95a1&wsfunction=mahara_user_create_users&alt=json",
+    "comment": "Not the real mahara admin token in URL."
+}
