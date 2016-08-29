@@ -1,6 +1,6 @@
 # AWS Lambda/Mahara demo
 
-This code accompanies a presentation on doing "serverless" user import/migration for Mahara.
+This code accompanies <a href="https://jlabusch.github.io/aws-lambda-mahara-demo">a presentation</a> on doing "serverless" user import/migration for Mahara.
 
 <b>DO NOT USE THIS FOR ANYTHING SERIOUS.</b><br/>
 It's completely untested, only exists for tech demo purposes.
